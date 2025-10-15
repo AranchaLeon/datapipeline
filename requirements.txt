@@ -1,1 +1,7 @@
-TODO
+# Requirements for the Python app
+azure-storage-blob
+tqdm
+pandas
+psutil
+sqlalchemy
+psycopg2-binary

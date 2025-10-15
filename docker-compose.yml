@@ -1,1 +1,75 @@
-TODO
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: postgres_container
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./certs:/var/lib/postgresql/certs:ro
+    networks:
+      core-network:
+        aliases:
+          - db
+    command: >
+      postgres
+      -c ssl=on
+      -c ssl_cert_file=/var/lib/postgresql/certs/server.crt
+      -c ssl_key_file=/var/lib/postgresql/certs/server.key
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etl_user -d local_db"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  flyway:
+    image: flyway/flyway:10
+    container_name: flyway_container
+    depends_on:
+      - db
+    command: -url=jdbc:postgresql://db:5432/local_db?sslmode=require -user=etl_user -password=etl_password -baselineOnMigrate=true migrate
+    volumes:
+      - ./migrations:/flyway/sql
+    networks:
+      core-network:
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: azurite
+    ports:
+      - "10000:10000"  # Blob service
+      - "10001:10001"  # Queue service
+      - "10002:10002"  # Table service
+    volumes:
+      - azurite_data:/data
+    networks:
+      core-network:
+        aliases:
+          - azurite
+
+  api-elt:
+    build: .
+    container_name: api_elt
+    depends_on:
+      - azurite
+    env_file:
+      - .env
+    networks:
+      core-network:
+        aliases:
+          - auxiliar
+    command: >
+      /bin/sh -c "python /app/scripts/init_bucket.py"
+    restart: "on-failure:1"
+
+volumes:
+  azurite_data:
+  pgdata:
+
+networks:
+  core-network:
+    driver: bridge

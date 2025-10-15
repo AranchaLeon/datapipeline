@@ -1,0 +1,36 @@
+[project]
+name = "src"
+version = "0.1.0"
+description = "Data pipeline with Python"
+authors = [
+    { name = "Arancha Leon" }
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "azure-storage-blob",
+    "tqdm",
+    "psycopg2-binary"
+]
+
+[tool.setuptools]
+packages = ["src"]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+
+[tool.black]
+line-length = 88
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+
+[tool.flake8]
+max-line-length = 88
+exclude = [".venv", "__pycache__", "build", "dist"]
