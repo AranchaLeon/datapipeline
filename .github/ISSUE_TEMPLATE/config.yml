@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+defaults:
+  - name: bug_report
+    label: bug
+  - name: feature_request
+    label: enhancement
