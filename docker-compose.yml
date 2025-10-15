@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./certs:/var/lib/postgresql/certs:ro
@@ -21,7 +21,7 @@ services:
       -c ssl_cert_file=/var/lib/postgresql/certs/server.crt
       -c ssl_key_file=/var/lib/postgresql/certs/server.key
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U etl_user -d local_db"]
+      test: ["CMD-SHELL", "pg_isready -U etl_user -d dp_db"]
       interval: 5s
       timeout: 10s
       retries: 10
@@ -31,7 +31,7 @@ services:
     container_name: flyway_container
     depends_on:
       - db
-    command: -url=jdbc:postgresql://db:5432/local_db?sslmode=require -user=etl_user -password=etl_password -baselineOnMigrate=true migrate
+    command: -url=jdbc:postgresql://db:5432/dp_db?sslmode=require -user=etl_user -password=etl_password -baselineOnMigrate=true migrate
     volumes:
       - ./migrations:/flyway/sql
     networks:
@@ -51,9 +51,9 @@ services:
         aliases:
           - azurite
 
-  api-elt:
+  api-etl:
     build: .
-    container_name: api_elt
+    container_name: api_etl
     depends_on:
       - azurite
     env_file:

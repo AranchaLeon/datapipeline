@@ -162,11 +162,11 @@ AVG_ROW_SIZE_BYTES=1024
 CHUNK_SIZE=1000
 POSTGRES_USER=etl_user
 POSTGRES_PASSWORD=etl_password
-POSTGRES_DB=local_db
+POSTGRES_DB=dp_db
 POSTGRES_HOST=db
 POSTGRES_PORT=5432
 FERNET_KEY=...
-POSTGRES_CONNECTION_STRING=postgresql://etl_user:etl_password@db:5432/local_db?sslmode=require
+POSTGRES_CONNECTION_STRING=postgresql://etl_user:etl_password@db:5432/dp_db?sslmode=require
 ```
 #### Variable descriptions
 
