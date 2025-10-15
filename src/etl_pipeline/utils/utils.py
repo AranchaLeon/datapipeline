@@ -31,7 +31,8 @@ def move_blob(blob_name, dest_blob_name):
 
 def estimate_chunk_size() -> int:
     """
-    Estimate the optimal chunk size for processing data based on environment variables and available memory.
+    Estimate the optimal chunk size for processing data based on environment
+    variables and available memory.
     Returns:
         int: Estimated chunk size (number of rows).
     """
@@ -62,7 +63,8 @@ def estimate_chunk_size() -> int:
 
 def create_container_client():
     """
-    Create and return a ContainerClient for the configured Azure Blob container.
+    Create and return a ContainerClient for the configured Azure Blob
+    container.
     Returns:
         ContainerClient: Azure Blob ContainerClient instance.
     Raises:
@@ -86,7 +88,8 @@ def create_container_client():
 
 def create_blob_client(blob_name: str):
     """
-    Create and return a BlobClient for a specific blob in the configured container.
+    Create and return a BlobClient for a specific blob in the configured
+    container.
     Args:
         blob_name (str): Name of the blob.
     Returns:

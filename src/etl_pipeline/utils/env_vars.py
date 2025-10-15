@@ -26,8 +26,8 @@ class EnvConfig:
 
     def __init__(self):
         """
-        Initialize EnvConfig by loading required and optional environment variables.
-        Sets up processed/success/fail prefixes for blob management.
+        Initialize EnvConfig by loading required and optional environment
+        variables. Sets up processed/success/fail prefixes for blob management.
         """
         for var in self.REQUIRED_VARS:
             setattr(self, var.lower(), os.getenv(var))

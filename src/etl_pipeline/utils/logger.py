@@ -11,7 +11,8 @@ def get_logger(name="src", level=None):
 
     Args:
         name (str): Logger name. Default is 'src'.
-        level (str, optional): Logging level ('INFO', 'DEBUG', etc). If not specified, uses LOG_LEVEL from environment or 'INFO'.
+        level (str, optional): Logging level ('INFO', 'DEBUG', etc).
+            If not specified, uses LOG_LEVEL from environment or 'INFO'.
 
     Returns:
         logging.Logger: Configured logger instance.

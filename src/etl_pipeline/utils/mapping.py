@@ -17,22 +17,25 @@ sales_column_mapping = {
 class ColumnMapper:
     def __init__(self, mapping: dict):
         """
-        Initialize ColumnMapper with a mapping dict that defines CSV to SQL column mapping.
+        Initialize ColumnMapper with a mapping dict that defines CSV to SQL
+        column mapping.
         Args:
-            mapping (dict): Dictionary mapping CSV columns to SQL columns or lists of columns.
+            mapping (dict): Dictionary mapping CSV columns to SQL columns or
+                lists of columns.
         """
 
         self.mapping = mapping
 
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Apply the column mapping to a DataFrame, handling direct and multi-column mappings.
+        Apply the column mapping to a DataFrame, handling direct and
+        multi-column mappings.
         Args:
             df (pd.DataFrame): Input DataFrame with CSV columns.
         Returns:
             pd.DataFrame: DataFrame with columns mapped for SQL loading.
         """
-        
+
         df_mapped = df.copy()
 
         for csv_col, sql_target in self.mapping.items():
