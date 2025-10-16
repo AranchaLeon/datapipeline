@@ -35,42 +35,49 @@ This project implements a modular, event-driven ETL (Extract, Transform, Load) p
 - **Blob management:** Moves processed blobs to success/fail folders based on ETL outcome.
  - **Secure connections (TLS/SSL):** All database and storage connections use TLS/SSL for encryption in transit.
 
-### Architecture Diagram
+## Architecture Diagram
 
-```mermaid
-flowchart TD
-    subgraph Storage
-        A[CSV File in Azurite Blob Storage]
-    end
-    subgraph ETL Pipeline
-        B[Extract: from_storage.py]
-        C[Transform: sales_data.py]
-        D[Load: to_sql.py]
-    end
-    subgraph Database
-        E[(PostgreSQL: sales table)]
-    end
-    subgraph Scripts
-        F[generate_mock_data.py]
-        G[upload_to_azurite.py]
-    end
-    F --> G
-    G --> A
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-```
+<img src="images/Arch.png" alt="Arquitectura del Proyecto" width="300"/>
 
-## Architecture
-- **Python 3.11** (slim image)
-- **Docker Compose** for multi-service orchestration
-- **Azurite** for local Azure Blob Storage emulation
-- **PostgreSQL** for data storage
-- **Flyway** for database migrations
-- **SQLAlchemy** for database connectivity
-- **Pandas** for data manipulation
-- **cryptography** for Fernet encryption
+
+The data architecture is structured into 5 well-defined, distinct layers to ensure clear separation of concerns, scalability, and maintainability across the data pipeline.
+
+| Layer | Component/Technology | Description and Function |
+| :--- | :--- | :--- |
+| **1. Data Sources Layer** | CSV Files | Contains raw sales transaction data. These files can originate from various transactional systems, such as Point of Sale (POS), or other internal systems. |
+| **2. Storage Layer** | Azure Blob Storage / Azurite | **Cloud Storage:** Azure Blob Storage is used for durable, scalable cloud data persistence.<br>**Local Development:** **Azurite** is used as a full local emulator to replicate Azure functionality, enabling cost-effective development and testing. |
+| **3. Processing Layer** | Python (Pandas) | The core of the ETL (Extract, Transform, Load) pipeline. Developed entirely in Python, it utilizes **Pandas** for efficient data manipulation and processing. We implement **chunking** techniques to effectively handle and process files of any size. |
+| **4. Database Layer** | PostgreSQL | A robust relational database. This layer is responsible for storing the processed, validated, and transformed data, making it readily available for analysis, reporting, and downstream applications. |
+| **5. Infrastructure Layer** | Docker Containers | This orchestrates the entire system. All components are encapsulated within **Docker containers**, providing excellent portability, consistency, and environment isolation across development, testing, and production environments. |
+
+---
+
+### Benefits of the Architecture
+
+* **Modularity:** Clear layer separation simplifies development and troubleshooting.
+* **Scalability:** Cloud-based storage and efficient chunking in the processing layer allow handling large data volumes.
+* **Consistency:** Docker ensures that the pipeline runs identically in all environments.
+
+
+
+### Core Technologies
+
+| Category | Technology | Purpose & Usage |
+| :--- | :--- | :--- |
+| **Primary Language** | **Python** | Our main programming language. We leverage **Pandas** for efficient data manipulation, **SQLAlchemy** for type-safe database operations, and the **Azure SDK** for cloud storage integration. |
+| **Containerization** | **Docker & Docker Compose** | Used for container orchestration. This guarantees that the environment is fully **reproducible** – it functions identically on a developer's laptop, the testing server, and in the production environment. |
+| **Database** | **PostgreSQL** | Selected for its robustness, advanced features, and reliability. We configure **SSL connections** and comprehensive **transaction handling** to ensure absolute data integrity. |
+| **Database Migrations** | **Flyway** | Utilized for database schema migration management. This means all schema changes are **versioned** and applied automatically and reliably across environments. |
+| **Local Cloud Emulation** | **Azurite** | The local emulator for Azure Blob Storage. It allows us to develop and rigorously test locally without incurring cloud costs or requiring constant internet connectivity. |
+| **Security & Encryption** | **Cryptography** | Employed for encrypting sensitive data using **Fernet algorithms**. Sensitive data, such as customer information, is encrypted before storage to ensure maximum security. |
+
+---
+
+### Key Benefits
+
+* **Reproducibility:** Docker ensures the code runs the same everywhere.
+* **Security:** SSL connections to the DB and Fernet encryption for sensitive data.
+* **Efficiency:** Local development and testing via Azurite and powerful data manipulation with Pandas.
 
 
 ## Folder Structure
@@ -91,8 +98,8 @@ src/
       csv_schemas.py       # CSV schema definitions
       mapping.py           # Column mapping logic
       logger.py            # Logging setup
-    migrations/
-      V1__init.sql         # Flyway migration scripts
+migrations/
+  V1__init.sql         # Flyway migration scripts
 scripts/
   generate_mock_data.py    # Mock data generator
   init_bucket.py           # Azurite bucket initializer
@@ -215,10 +222,36 @@ Where:
 The generated file will be saved in the `data/` folder with a timestamped name. You can then upload it to the bucket and process it with the ETL pipeline.
 
 ## ETL Flow
+
+```mermaid
+flowchart TD
+    subgraph Storage
+        A[CSV File in Azurite Blob Storage]
+    end
+    subgraph ETL Pipeline
+        B[Extract: from_storage.py]
+        C[Transform: sales_data.py]
+        D[Load: to_sql.py]
+    end
+    subgraph Database
+        E[(PostgreSQL: sales table)]
+    end
+    subgraph Scripts
+        F[generate_mock_data.py]
+        G[upload_to_azurite.py]
+    end
+    F --> G
+    G --> A
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+```
+
 1. **Extract:**
    - Streams CSV from Azure Blob Storage in chunks.
-   - Validates required columns and types.
 2. **Transform:**
+   - Validates required columns and types.
    - Applies column mapping.
    - Handles missing values, normalizes strings, filters invalid rows.
    - Encrypts sensitive columns.
@@ -226,6 +259,7 @@ The generated file will be saved in the `data/` folder with a timestamped name. 
 3. **Load:**
    - Loads DataFrame into PostgreSQL in concurrent batches.
    - Handles errors and logs results.
+4. **Move blob:**
    - Moves blob to success/fail folder based on outcome.
 
 ## Schema Management
@@ -239,11 +273,12 @@ The generated file will be saved in the `data/` folder with a timestamped name. 
 - Blobs are moved to appropriate folders after processing.
 
 ## Extending & Customizing
-- Add new SQL schemas by creating a new SQLALCHEMY_SCHEMA dictionary in `table_schemas.py` for each table.
-- Add new CSV schemas in `csv_schemas.py`.
+- Create a new migration .sql in `migrations` folder.
+- Add/update SQL schemas in `table_schemas.py`.
+- Add/update CSV schemas in `csv_schemas.py`.
 - Update column mapping in `mapping.py`.
 - Add transformation logic in `sales_data.py`.
-- Adjust chunk size and memory usage in `.env`.
+- Optional: Adjust chunk size and memory usage in `.env`.
 
 ## Troubleshooting
 - Check logs for error details.
