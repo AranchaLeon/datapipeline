@@ -1,3 +1,0 @@
-transaction_id,customer_id,product_id,store_id,quantity,unit_price,discount,total_amount,payment_method,timestamp
-TX-42cc741b-6439-48ab-b0e0-94ca6fbdf90d,CUST-005,PROD-008,STORE-004,5,250.49,0.1,1127.21,paypal,2025-10-09 08:27:43
-TX-70f786c4-afb8-4e56-bff8-725b08e51263,CUST-003,PROD-001,STORE-002,3,550.16,0.1,1485.43,paypal,2025-10-10 13:12:15

@@ -17,7 +17,8 @@ class EnvConfig:
         "POSTGRES_HOST",
         "POSTGRES_PORT",
         "FERNET_KEY",
-        "POSTGRES_SSLMODE"
+        "POSTGRES_SSLMODE",
+        "BATCH_SIZE"
     ]
 
     OPTIONAL_VARS = [

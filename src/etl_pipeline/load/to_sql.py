@@ -7,7 +7,7 @@ logger = get_logger()
 config = EnvConfig()
 
 
-def load_df_to_sql(df: pd.DataFrame, table_name: str) -> None:
+def load_df_to_sql(df: pd.DataFrame, table_name: str) -> bool:
     """
     Loads a DataFrame into the specified SQL table.
     Returns True if successful, False if failed.
@@ -20,7 +20,7 @@ def load_df_to_sql(df: pd.DataFrame, table_name: str) -> None:
         engine = get_postgres_engine(config)
 
         # Batch size for concurrent loading
-        batch_size = 1000
+        batch_size = int(config.batch_size)
         num_records = len(df)
         batches = [
             df.iloc[i:i + batch_size]
