@@ -91,7 +91,7 @@ def transform_sales_data(df_raw: pd.DataFrame) -> Optional[pd.DataFrame]:
             logger.warning("0 rows after validation. No data to load.")
             return None
 
-        # 7. Select only required SQL columns
+        # 7. Validate required SQL columns and select available columns
         required_columns = [
             col_meta["name"]
             for col_meta in SALES_SQLALCHEMY_SCHEMA["columns"]
@@ -108,7 +108,13 @@ def transform_sales_data(df_raw: pd.DataFrame) -> Optional[pd.DataFrame]:
             )
             raise ValueError(f"Missing required columns: {missing_sql_cols}")
 
-        df_transformed = df[required_columns].copy()
+        # Select all SQL columns that are present in the DataFrame
+        sql_columns = [
+            col_meta["name"]
+            for col_meta in SALES_SQLALCHEMY_SCHEMA["columns"]
+            if col_meta["name"] in df.columns
+        ]
+        df_transformed = df[sql_columns].copy()
 
         logger.info(
             f"Transformed chunk. Output {len(df_transformed)} rows"
