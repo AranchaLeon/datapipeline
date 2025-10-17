@@ -3,13 +3,15 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
-- [Architecture Diagram](#architecture-diagram)
 - [Architecture](#architecture)
 - [Folder Structure](#folder-structure)
 - [Setup & Usage](#setup--usage)
   - [Prerequisites](#prerequisites)
-  - [Generate TLS/SSL Certificates (for secure connections)](#generate-tlsssl-certificates-for-secure-connections)
-  - [Configure environment variables](#configure-environment-variables)
+  - [Create and activate virtual environment](#create-and-activate-virtual-environment)
+  - [Install dependencies](#install-dependencies)
+  - [Clone the repository](#1-clone-the-repository)
+  - [Generate TLS/SSL Certificates](#generate-tlsssl-certificates-for-secure-connections)
+  - [Configure environment variables](#2-configure-environment-variables)
   - [Build and start services](#3-build-and-start-services)
   - [Run the ETL pipeline](#4-run-the-etl-pipeline)
 - [ETL Flow](#etl-flow)
@@ -17,7 +19,8 @@
 - [Error Handling & Logging](#error-handling--logging)
 - [Extending & Customizing](#extending--customizing)
 - [Troubleshooting](#troubleshooting)
-- [TLS/SSL Configuration and Architecture](#tlsssl-configuration-and-architecture)
+- [TLS/SSL](#tlsssl)
+- [GitHub Collaboration Templates](#github-collaboration-templates)
 - [Authors](#authors)
 
 ## Overview
@@ -35,7 +38,7 @@ This project implements a modular, event-driven ETL (Extract, Transform, Load) p
 - **Blob management:** Moves processed blobs to success/fail folders based on ETL outcome.
  - **Secure connections (TLS/SSL):** All database and storage connections use TLS/SSL for encryption in transit.
 
-## Architecture Diagram
+## Architecture
 
 <img src="images/Arch.png" alt="Arquitectura del Proyecto" width="300"/>
 
