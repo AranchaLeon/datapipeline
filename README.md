@@ -20,6 +20,7 @@
 - [Extending & Customizing](#extending--customizing)
 - [Troubleshooting](#troubleshooting)
 - [TLS/SSL](#tlsssl)
+- [Future Improvements](#future-improvements)
 - [GitHub Collaboration Templates](#github-collaboration-templates)
 - [Authors](#authors)
 
@@ -339,7 +340,19 @@ Azurite does not natively support HTTPS in Docker Desktop. For this reason, the 
 > Note: For most development scenarios, using HTTP for Azurite locally is acceptable. Always use HTTPS in production.
 
 
-## Authors
+## Future Improvements
+
+### 1. Schema Configuration Externalization
+- **Move schemas to configuration files:** Extract `csv_schemas.py`, `table_schemas.py` and `mapping.py` into external configuration files (JSON/YAML/TOML).
+- **Benefits:**
+  - **Flexibility:** Allow schema and mapping modifications without redeploying the application.
+  - **Dynamic configuration:** Load schemas at runtime from configuration files or environment variables.
+  - **Separation of concerns:** Separate business logic from data configuration.
+- **Proposed implementation:**
+  - Create `config/` directory with files: `csv_schemas.json`, `table_schemas.json`, `column_mapping.json`
+  - Modify utilities to load configurations from these files
+  - Maintain compatibility with existing configurations during transition
+
 ## GitHub Collaboration Templates
 
 This project includes GitHub templates to standardize collaboration:

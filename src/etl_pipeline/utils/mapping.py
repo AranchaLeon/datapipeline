@@ -10,7 +10,7 @@ sales_column_mapping = {
     "discount": "discount",
     "total_amount": "total_amount",
     "payment_method": "payment_method",
-    "timestamp": ["sale_date", "sale_time"],
+    "timestamp": ["sale_date", "sale_time"]
 }
 
 
